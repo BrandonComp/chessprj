@@ -32,9 +32,32 @@ public class ChessModel implements IChessModel {
 		}
 	}
 
-	public boolean isComplete() {
-		boolean valid = false;
-		return valid;
+	public boolean isComplete(Player p) {
+		boolean checkmate = true;
+		if(inCheck(p)){
+			for(int i = 0; i < 8; i++){
+				for(int i2 = 0; i2 < 8; i2++){
+					if(board[i][i2] != null && board[i][i2].player() == p){
+						for(int i3 = 0; i3 < 8; i3++){
+							for (int i4 = 0; i4 < 8; i4++){
+								Move move = new Move(i,i2,i3,i4);
+								if(board[i][i2]!= null && board[i][i2].isValidMove(move,board)){
+									var temp = board[i3][i4];
+									board[i3][i4] = board[i][i2];
+									board[i][i2] = null;
+									if(!inCheck(p)){
+										checkmate = false;
+									}
+									board[i][i2] = board[i3][i4];
+									board[i3][i4] = temp;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return checkmate;
 	}
 
 	public boolean isValidMove(Move move) {
@@ -52,13 +75,43 @@ public class ChessModel implements IChessModel {
 		board[move.fromRow][move.fromColumn] = null;
 	}
 
+	//incheck
+//find other player king first
+//scan board for not null spaces and if they are of your color
+//check for all  your pieces if it is a valid move for them to move to king space.
+//create move to go to king space and check if it is valid
+//then display in check popup
+
+	//checkmate
+//go through each piece of team in check and try to input every possible move then check if still in check
 	public boolean inCheck(Player p) {
+		int x=0;
+		int y=0;
 		boolean valid = false;
+		//locate this players king
+		for (int i = 0; i <  8; i++) {
+			for(int i2 = 0; i2 < 8; i2++) {
+				if (board[i][i2] != null && board[i][i2].type() == "King" && board[i][i2].player() == p) {
+					x = i2;
+					y = i;
+				}
+			}
+		}
+		//go through all pieces on the board, if they are of your color
+		for(int i = 0; i < 8; i++){
+			for(int i2 = 0; i2 < 8 ; i2++){
+				Move move = new Move(i,i2,y,x);
+				if(board[i][i2] != null && board[i][i2].player() != p && board[i][i2].isValidMove(move,board)){
+					valid = true;
+				}
+			}
+		}
+
 		return valid;
 	}
 
-
 	public Player currentPlayer() {
+
 		return player;
 	}
 
@@ -99,6 +152,7 @@ public class ChessModel implements IChessModel {
 		 *d. Move a piece (pawns first) forward toward opponent king 
 		 *		i. check to see if that piece is in danger of being removed, if so, move a different piece.
 		 */
-
+		
 		}
+
 }

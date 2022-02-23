@@ -9,56 +9,60 @@ public class Bishop extends ChessPiece {
 	}
 	
 	public boolean isValidMove(Move move, IChessPiece[][] board) {
+		//calls the chesspiece isvalidmove method to check for generic validations
 		if(!super.isValidMove(move, board))
 			return false;
+
 		try {
-			if (Math.abs(move.fromRow - move.toRow) / Math.abs(move.fromColumn - move.toColumn) != 1) {
+			//Performs |x1-x2|/|y1-y2|, which should always be equal to one based on the movement of the rook, returns invalid if not
+			if (Double.valueOf(Math.abs(move.fromRow - move.toRow)) / Double.valueOf(Math.abs(move.fromColumn - move.toColumn)) != 1) {
 				return false;
 			}
 		}
+		//if the denominator is 0, then the bishop attempted to move only vertically so we return false
 		catch(ArithmeticException e){
 			return false;
 		}
 
+		//integer used to determine which way the rook is moving vertically
 		int diff = move.toRow - move.fromRow;
-		if(diff < 0){
+		//integer used to determine which way the rook is moving horizontally
+		int diffc = move.toColumn - move.fromColumn;
+
+		//if statements for checking if the bishop will pass through a piece, returning invalid if true
+		//moving diagonally up and to the right
+		if(diff < 0 && diffc > 0){
 			for(int i = -1; i > diff; i--){
-				if(board[move.fromRow+i][move.fromColumn+i] != null){
+				if(board[move.fromRow+i][move.fromColumn-i] != null){
 					return false;
 				}
 			}
 		}
-		if(diff > 0){
+		//moving diagonally down and to the right
+		if(diff > 0 && diffc > 0){
 			for(int i = 1; i < diff; i++){
 				if(board[move.fromRow+i][move.fromColumn+i] != null){
 					return false;
 				}
 			}
 		}
-		if(diff > 0){
+		//moving diagonally down and to the left
+		if(diff > 0 && diffc < 0){
 			for(int i = 1; i < diff; i++){
-				if(board[move.fromRow-i][move.fromColumn+i] != null){
+				if(board[move.fromRow+i][move.fromColumn-i] != null){
 					return false;
 				}
 			}
 		}
-		//works until here
-		//index out of bounds if trying to cross over from more then one space away
-//		if(diff < 0) {
-//			for(int i = -1; i < diff; i--) {
-//				if (board[move.fromRow - i][move.fromColumn + i] != null) {
-//					return false;
-//				}
-//			}
-//		}
+		//moving diagonally up and to the left
+		if(diff < 0 && diffc < 0) {
+			for(int i = -1; i > diff; i--) {
+				if (board[move.fromRow + i][move.fromColumn + i] != null) {
+					return false;
+				}
+			}
+		}
 		return true;
 		
 	}
 }
-
-//incheck
-//find other player king first
-//scan board for not null spaces and if they are of your color
-//check for all  your pieces if it is a valid move for them to move to king space.
-//create move to go to king space and check if it is valid
-//then display in check popup

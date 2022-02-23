@@ -5,7 +5,7 @@ public interface IChessModel {
 	 *
 	 * @return {@code true} if complete, {@code false} otherwise.
 	 */
-	boolean isComplete();
+	boolean isComplete(Player p);
 
 	/**
 	 * Returns whether the piece at location {@code [move.fromRow, move.fromColumn]} is allowed to move to location

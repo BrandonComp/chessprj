@@ -10,9 +10,19 @@ public class Pawn extends ChessPiece {
 	// determines if the move is valid for a pawn piece
 	public boolean isValidMove(Move move, IChessPiece[][] board) {
 		boolean valid = true;
+		//calls the chesspiece isvalidmove method to check for generic validations
 		if(!super.isValidMove(move, board)) {
 			valid = false;
 		}
+		//checks if this is the pawns first movement, allowing it to move two spaces(for white)
+		if(move.fromRow == 6 && move.fromColumn == move.toColumn && move.fromRow-2 == move.toRow && this.player() == Player.WHITE && board[move.toRow][move.toColumn] == null){
+			return true;
+		}
+		//checks if this is the first time the pawns first movement, allowing it to move two spaces(for black)
+		if(move.fromRow == 1 && move.fromColumn == move.toColumn && move.fromRow+2 == move.toRow && this.player() == Player.BLACK && board[move.toRow][move.toColumn] == null){
+			return true;
+		}
+		//checks if
 		if((Math.abs(move.fromRow-1) != move.toRow  || move.fromColumn != move.toColumn) && this.player() == Player.WHITE){
 			valid = false;
 		}
@@ -22,13 +32,14 @@ public class Pawn extends ChessPiece {
 		if(board[move.toRow][move.fromColumn] != null){
 			valid = false;
 		}
-		//If statements for checking if the pawn is able to take opponents piece
+
+		//If statements checking for the unique condition where a pawn is able to take an opponents piece
 		if(move.fromRow-1 == move.toRow && move.fromColumn+1 == move.toColumn && board[move.toRow][move.fromColumn+1] != null
 				&& this.player() == Player.WHITE && board[move.toRow][move.fromColumn+1].player() == Player.BLACK){
 			valid = true;
 		}
-		if (move.fromRow-1 == move.toRow && move.fromColumn-1 == move.toColumn &&
-				board[move.toRow][move.fromColumn-1] != null && this.player() != board[move.toRow][move.fromColumn-1].player()) {
+		if (move.fromRow-1 == move.toRow && move.fromColumn-1 == move.toColumn && board[move.toRow][move.fromColumn-1] != null
+				&& this.player() ==Player.WHITE && board[move.toRow][move.fromColumn-1].player()== Player.BLACK ) {
 			valid = true;
 		}
 
@@ -40,8 +51,6 @@ public class Pawn extends ChessPiece {
 				&& this.player() == Player.BLACK && board[move.toRow][move.fromColumn-1].player() == Player.WHITE){
 			valid = true;
 		}
-
-		//if space diagnol contains piece of opposite color
 
 		return valid;
 	}

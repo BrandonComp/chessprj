@@ -52,7 +52,7 @@ public class ChessPanel extends JPanel {
                     placeBlackPieces(r,c);
                 }
 
-//                setBackGroundColor(r, c);
+                setBackGroundColor(r, c);
                 boardpanel.add(board[r][c]);
             }
         }
@@ -62,13 +62,17 @@ public class ChessPanel extends JPanel {
         firstTurnFlag = true;
     }
 
-//    private void setBackGroundColor(int r, int c) {
-//        if ((c % 2 == 1 && r % 2 == 0) || (c % 2 == 0 && r % 2 == 1)) {
-//            board[r][c].setBackground(Color.LIGHT_GRAY);
-//        } else if ((c % 2 == 0 && r % 2 == 0) || (c % 2 == 1 && r % 2 == 1)) {
-//            board[r][c].setBackground(Color.WHITE);
-//        }
-//    }
+    private void setBackGroundColor(int r, int c) {
+        if ((c % 2 == 1 && r % 2 == 0) || (c % 2 == 0 && r % 2 == 1)) {
+            board[r][c].setBackground(Color.LIGHT_GRAY);
+            board[r][c].setOpaque(true);
+            board[r][c].setBorderPainted(false);
+        } else if ((c % 2 == 0 && r % 2 == 0) || (c % 2 == 1 && r % 2 == 1)) {
+            board[r][c].setBackground(Color.WHITE);
+            board[r][c].setOpaque(true);
+            board[r][c].setBorderPainted(false);
+        }
+    }
 
     private void placeWhitePieces(int r, int c) {
         if (model.pieceAt(r, c).type().equals("Pawn")) {
@@ -209,12 +213,38 @@ public class ChessPanel extends JPanel {
                             toCol = c;
                             firstTurnFlag = true;
                             Move m = new Move(fromRow, fromCol, toRow, toCol);
+
+
+
                             if ((model.isValidMove(m))) {
                                 model.move(m);
                                 displayBoard();
                             }
+//                            if ((model.isValidMove(m)) && model.currentPlayer() == model.pieceAt(fromRow,fromCol).player()) {
+//                                model.move(m);
+//                                displayBoard();
+//                                model.setNextPlayer();
+//                            }
+
                             else{
-                                JOptionPane.showMessageDialog(null, "Invalid move");
+                                if(model.pieceAt(fromRow,fromCol) != null && model.pieceAt(fromRow,fromCol).player() != model.currentPlayer()){
+                                    JOptionPane.showMessageDialog(null, "It is your opponents turn");
+                                }
+                                else {
+                                    JOptionPane.showMessageDialog(null, "Invalid move");
+                                }
+                            }
+                            if(model.inCheck(Player.WHITE)){
+                                JOptionPane.showMessageDialog(null, "White is in check");
+                                if(model.isComplete(Player.WHITE)){
+                                    JOptionPane.showMessageDialog(null, "Checkmate, Black wins");
+                                }
+                            }
+                            if(model.inCheck(Player.BLACK)){
+                                JOptionPane.showMessageDialog(null, "Black is in check");
+                                if(model.isComplete(Player.BLACK)){
+                                    JOptionPane.showMessageDialog(null, "Checkmate, White wins");
+                                }
                             }
                         }
         }
