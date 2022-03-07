@@ -1,16 +1,35 @@
+/**********************************************************************
+ * Creates the properties for a queen chess piece and determines its
+ * valid movements.
+ *
+ * @author Brandon Rodriguez and Brendon Werner
+ * @version Winter 2022
+ *********************************************************************/
 
 public class Queen extends ChessPiece {
 
-	public Queen(Player player) {
-		super(player);
+	/*****************************************************************
+	 Constructor creates a queen chess piece and assigns the owner
+	 of the piece.
+	 @param player the owner of this piece
+	 *****************************************************************/
+	public Queen(Player player) { super(player); }
 
-	}
 
-	public String type() {
-		return "Queen";
-		
-	}
-	
+	/*****************************************************************
+	 Returns the queen's title in a string format
+	 @return "Queen"
+	 *****************************************************************/
+	public String type() { return "Queen"; }
+
+
+	/*****************************************************************
+	 Determines if the move is valid for a queen piece,
+	 returning false if invalid, true if valid.
+	 @param move the move to check
+	 @param board the board the game is taking place on
+	 @return true if valid, false if invalid
+	 *****************************************************************/
 	public boolean isValidMove(Move move, IChessPiece[][] board) {
 		//calls the chesspiece isvalidmove method to check for generic validations
 		if(!super.isValidMove(move, board))
